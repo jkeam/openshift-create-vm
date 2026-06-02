@@ -41,9 +41,13 @@ stringData:
     fc-cache -fv
     rm Hack.zip
 
-    wget https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/stable-4.21/openshift-install-linux.tar.gz
-    tar -xvf ~/openshift-install-linux.tar.gz
+    wget https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/stable-4.21/openshift-client-linux-4.21.17.tar.gz
+    tar -xvf ./openshift-client-linux-4.21.17.tar.gz
     sudo mv ./oc /usr/bin
     sudo chmod 744 /usr/bin/oc
+    sudo mv ./kubectl /usr/bin
+    sudo chmod 744 /usr/bin/kubectl
+    rm ./README.md
+    rm openshift-client-linux-4.21.17.tar.gz
 type: Opaque
 
