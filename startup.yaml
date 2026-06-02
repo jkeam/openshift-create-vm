@@ -40,5 +40,10 @@ stringData:
     unzip -d ~/.local/share/fonts Hack.zip
     fc-cache -fv
     rm Hack.zip
+
+    wget https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/stable-4.21/openshift-install-linux.tar.gz
+    tar -xvf ~/openshift-install-linux.tar.gz
+    sudo mv ./oc /usr/bin
+    sudo chmod 744 /usr/bin/oc
 type: Opaque
 

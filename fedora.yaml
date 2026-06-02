@@ -16,7 +16,6 @@ spec:
     - apiVersion: cdi.kubevirt.io/v1beta1
       kind: DataVolume
       metadata:
-        creationTimestamp: null
         name: fedora
       spec:
         sourceRef:
