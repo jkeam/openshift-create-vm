@@ -1,4 +1,4 @@
-# Openshift Create VM
+# OpenShift Create VM
 
 Repo to easily create a VM in OpenShift.
 
