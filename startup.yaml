@@ -1,0 +1,44 @@
+kind: Secret
+apiVersion: v1
+metadata:
+  name: startup
+stringData:
+  userdata: |
+    #!/bin/bash
+
+    export NEW_USER="fedora"
+    sudo dnf update -y && sudo dnf upgrade -y
+    sudo timedatectl set-timezone America/New_York
+    sudo hostnamectl set-hostname fedora
+
+    sudo dnf install net-tools neovim git tmux zsh wget fc-cache -y
+
+    cat << EOF > /home/$NEW_USER/oc-login.sh
+    #!/bin/bash
+    export OPENSHIFT_TOKEN='sha256~stuff'
+    oc login --token=\$OPENSHIFT_TOKEN --server=https://apiserver.openshift-kube-apiserver.svc.cluster.local
+    EOF
+    sudo chown $NEW_USER:$NEW_USER /home/$NEW_USER/oc-login.sh
+    sudo chmod 744 /home/$NEW_USER/oc-login.sh
+
+    sudo curl -fLo /home/$NEW_USER/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+    sudo curl -fLo /home/$NEW_USER/.local/share/nvim/site/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+    sudo mkdir -p /home/$NEW_USER/dev/projects/dotfiles
+    sudo git clone https://github.com/jkeam/dotfiles /home/$NEW_USER/dev/projects/dotfiles
+    sudo cp /home/$NEW_USER/dev/projects/dotfiles/.vimrc /home/$NEW_USER
+    sudo mkdir -p /home/$NEW_USER/.config/nvim
+    sudo cp /home/$NEW_USER/dev/projects/dotfiles/.vimrc /home/$NEW_USER/.config/nvim/init.vim
+    sudo curl -fsSL -o /home/$NEW_USER/install-ohmyzshell.sh https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
+    sudo chown $NEW_USER:$NEW_USER -R /home/$NEW_USER
+    sudo chmod 777 /home/$NEW_USER/install-ohmyzshell.sh
+    sudo su -c "/home/$NEW_USER/install-ohmyzshell.sh --unattended" $NEW_USER
+    sudo su -c "echo 'export TERM=xterm-256color' >> /home/$NEW_USER/.zshrc" $NEW_USER
+    sudo rm /home/$NEW_USER/install-ohmyzshell.sh
+
+    wget https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/Hack.zip
+    mkdir -p ~/.local/share/fonts
+    unzip -d ~/.local/share/fonts Hack.zip
+    fc-cache -fv
+    rm Hack.zip
+type: Opaque
+
